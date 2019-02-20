@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Disable the detail debug logging at start up by setting the status to log level OFF -->
+<Configuration status="OFF">
+	<Properties>
+		<Property name="log-path">logs</Property>
+		<Property name="log-filename">police</Property>
+	</Properties>
+	<Appenders>
+		<Console name="STDOUT" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} - %t - %-5p - %m%n"/>
+		</Console>
+		<!-- Setup the log file to rotate based on size limit -->
+		<RollingFile name="RollingFile" fileName="${log-path}/${log-filename}.log" filePattern="${log-path}/${log-filename}-%i.log">
+			<PatternLayout>
+				<!-- Refer http://logging.apache.org/log4j/2.x/manual/layouts.html#PatternLayout -->
+				<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}-[%c]-%-5p-%m%n</pattern>
+			</PatternLayout>
+			<Policies>
+				<!-- Set the max log file size to 4 MB and rotate it when it reaches the limit -->
+				<SizeBasedTriggeringPolicy size="4 MB" />
+			</Policies>
+			<!-- Set the max number of log files to 5 each 4 MB before it is removed
+			     and oldest file is moved to the next one when the new log is created -->
+			<DefaultRolloverStrategy fileIndex="min" max="5"/>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Logger name="com.nz.pinnacle.automation.pinnaclelife" level="debug" additivity="false">		
+			<AppenderRef ref="RollingFile"/>
+		</Logger>
+		<Root level="error" additivity="false">
+			<AppenderRef ref="STDOUT"/>
+		</Root>
+	</Loggers>
+</Configuration>
